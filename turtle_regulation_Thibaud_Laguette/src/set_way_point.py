@@ -5,7 +5,7 @@ import math
 
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose
-
+from turtle_regulation_Thibaud_Laguette.srv import waypoint
 global waypoint
 global angleD
 global e
@@ -18,6 +18,7 @@ def subscribe_pose():
 	turtlePose=None
 
 	rospy.init_node('set_way_point',anonymous=False)
+	rospy.Service('set_waypoint_service', waypoint, set_waypoint_service)
 	rospy.Subscriber("pose",Pose,getPose)
 
 	pub=rospy.Publisher("cmd_vel",Twist,queue_size=1)
@@ -62,6 +63,10 @@ def getPose(pose):
 	global turtlePose
 	turtlePose=pose
 
+def set_waypoint_service(input):
+	global coords
+	coords = [input.x.data, input.y.data]
+	return Bool(True)
 
 if __name__=="__main__":
 
