@@ -25,23 +25,37 @@ def subscribe_pose():
 
 	kp=rospy.get_param("~kp")
 	kpl=rospy.get_param("~kpl")
-
+	#dist_tol=rospy.get_param("~dist_tol")
 	while not rospy.is_shutdown():
 		message=Twist()
 
 		if turtlePose is not None:
 
+			#partie1
 			angleD=math.atan2( waypoint[1]-turtlePose.y,waypoint[0]-turtlePose.x)
-			print("Angle desirer",angleD)
+			print("Angle desirer=",angleD)
 			e=math.atan(math.tan((angleD-turtlePose.theta)/2))
-			print("e egale", e)
+			print("e=", e)
 			u = kp * e
-			print("u egale",u)
+			print("u=",u)
 			message.angular.z = u
-			pub.publish(message)
-		rate.sleep()
 
-#def move_turtle(pub,rate,linear_speed):
+
+			#partie2
+
+			distance=math.sqrt((math.pow(waypoint[1]-turtlePose.y,2) )+( math.pow(waypoint[0]-turtlePose.x,2))) 
+			print("Distance=",distance)
+			v=kpl*distance
+			print("v=",v)
+
+			message.linear.x=v
+			pub.publish(message)
+
+			#t0=rospy.Time.now().to_sec()
+			#distance_tolerance=0
+
+			rate.sleep()
+
 
 
 def getPose(pose):
